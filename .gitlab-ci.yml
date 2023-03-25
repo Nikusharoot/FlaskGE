@@ -1,0 +1,25 @@
+stages:
+  - build
+  - deploy
+
+build-job:
+  stage: build
+  tags:
+    - linux
+  script:
+    - echo "რეპოზიტორიის გადწმოწერა"
+    - mkdir -p ~/APP
+    - cd ~/APP
+    - git clone https://oauth2:glpat-fxGgb1g8ykX-xjnyYb8E@gitlab.com/Nikusharoot/flaskge.git
+    - mv flaskge/* . && rm -rf flaskge
+    - apt-get update && apt-get install -y ansible
+    - ansible-playbook flask_start.yml
+deploy-job:
+  stage: deploy
+  tags:
+    - linux
+  environment: development
+  script:
+    - echo "Flask აპლიკაციის გაშვება"
+    - pip3 install -r requirements.txt
+    - python3 app.py
